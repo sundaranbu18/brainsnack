@@ -1,0 +1,22 @@
+# Render blueprint: New > Blueprint > pick this repository.
+services:
+  - type: web
+    name: brainsnack-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: MONGODB_URI
+        sync: false # paste your Atlas connection string in the dashboard
+      - key: DB_NAME
+        value: brainsnack
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: ADMOB_PUBLISHER_ID
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
