@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'ads.dart';
@@ -74,29 +75,33 @@ class _ShellState extends State<Shell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: IndexedStack(index: _tab, children: [
-          HomeScreen(onBrowse: () => setState(() => _tab = 1)),
-          const BrowseScreen(),
-          const LeaderboardScreen(),
-          const ProfileScreen(),
-        ]),
-      ),
-      bottomNavigationBar: Column(mainAxisSize: MainAxisSize.min, children: [
-        const BannerAdBox(),
-        NavigationBar(
-          selectedIndex: _tab,
-          onDestinationSelected: (i) => setState(() => _tab = i),
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home_rounded), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore_rounded), label: 'Browse'),
-            NavigationDestination(icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events_rounded), label: 'Ranks'),
-            NavigationDestination(icon: Icon(Icons.person_outline_rounded), selectedIcon: Icon(Icons.person_rounded), label: 'Profile'),
-          ],
-        ),
-      ]),
-    );
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        // Keep the clock and battery icons readable on screens without an app bar.
+        value: (dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(statusBarColor: Colors.transparent),
+        child: Scaffold(
+          body: SafeArea(
+            bottom: false,
+            child: IndexedStack(index: _tab, children: [
+              HomeScreen(onBrowse: () => setState(() => _tab = 1)),
+              const BrowseScreen(),
+              const LeaderboardScreen(),
+              const ProfileScreen(),
+            ]),
+          ),
+          bottomNavigationBar: Column(mainAxisSize: MainAxisSize.min, children: [
+            const BannerAdBox(),
+            NavigationBar(
+              selectedIndex: _tab,
+              onDestinationSelected: (i) => setState(() => _tab = i),
+              destinations: const [
+                NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home_rounded), label: 'Home'),
+                NavigationDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore_rounded), label: 'Browse'),
+                NavigationDestination(icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events_rounded), label: 'Ranks'),
+                NavigationDestination(icon: Icon(Icons.person_outline_rounded), selectedIcon: Icon(Icons.person_rounded), label: 'Profile'),
+              ],
+            ),
+          ]),
+        ));
   }
 }
